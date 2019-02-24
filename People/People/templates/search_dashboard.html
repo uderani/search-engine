@@ -10,9 +10,22 @@
 <h2>Type Here</h2>
     <form method="POST" class="post-form">
         {% csrf_token %}
-        {{ context.form }}
-        <button type="submit" class="save btn btn-default">Save</button>
+        {{ form }}
+        <button type="submit" class="save btn btn-default">Search</button>
     </form>
+    {% if not found %}
+        <h5>No results found <h5>
+    {% else %}
+            <h3> Results <h3>
+            {% for rank_results in results %}
+                <h4>Rank {{ forloop.counter0 }} <h4><br>
+                {% for result in rank_results %}
+                    Item {{  forloop.counter }} <br>
+                    {{ result.index }} : {{ result.full_name }} <br>
+                {% endfor %}
+                    <br>
+            {% endfor %}
+    {% endif %}
 </body>
 {% endblock %}
 </html>

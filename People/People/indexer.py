@@ -1,58 +1,65 @@
+from .utilities import char_to_index
+
+
 class AlphabetNode:
+    """
+    A tree node
+    """
 
-    # Trie node class
     def __init__(self):
-        self.children = [None] * 26
-
+        """
+        Create possible children 26 alphabets + space to support one of the edge case names
+        """
+        self.children = [None] * 27  # 27 to support space
         # isEndOfWord is True if node represent the end of the word
         self.isEndOfWord = False
+        self.possible = 0
+        self.indexes = []
 
 
 class ColumnIndex:
-    # Trie data structure class
+    """
+    The index tree which is based on Trie Data Structure
+                    (Root)
+                     /  \
+                   (a)  (b)<-AlphabetNode
+                   /     \
+                  /       \
+               (n)         (a)
+              /   \         \
+            (t)  (y)        (r)
+    """
     def __init__(self):
+        """
+        # Create default empty root node
+        """
         self.root = self.get_node()
 
     def get_node(self):
-        # Returns new trie node (initialized to NULLs)
+        """
+        Creates alphabet node
+        """
         return AlphabetNode()
 
-    def _char_to_index(self, ch):
-        # private helper function
-        # Converts key current character into index
-        # use only 'a' through 'z' and lower case
-
-        return ord(ch) - ord('a')
-
-    def insert(self, key):
-
-        # If not present, inserts key into trie
-        # If the key is prefix of trie node,
-        # just marks leaf node
+    def insert(self, key, position):
+        """
+        1. Inserts key into the tree
+        2. If prefix is present in just marks nodes on the way
+        3. Marks leaf node
+        4. Adds position of the key in database
+        """
         p_crawl = self.root
         length = len(key)
         for level in range(length):
-            index = self._char_to_index(key[level])
+            index = char_to_index(key[level])
 
             # if current character is not present
             if not p_crawl.children[index]:
                 p_crawl.children[index] = self.get_node()
             p_crawl = p_crawl.children[index]
+            p_crawl.possible += 1
+            # mention start and end index in table
 
             # mark last node as leaf
+        p_crawl.indexes.append(position)
         p_crawl.isEndOfWord = True
-
-    def search(self, key):
-
-        # Search key in the trie
-        # Returns true if key presents
-        # in trie, else false
-        p_crawl = self.root
-        length = len(key)
-        for level in range(length):
-            index = self._char_to_index(key[level])
-            if not p_crawl.children[index]:
-                return False
-            p_crawl = p_crawl.children[index]
-
-        return not p_crawl and p_crawl.isEndOfWord
