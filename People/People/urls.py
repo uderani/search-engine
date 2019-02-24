@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from .views import search_by_keyword
+from .views import search_by_keyword, search_by_api
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^dashboard/$', search_by_keyword)
+    url(r'^dashboard/$', search_by_keyword),
+    url(r'^search/$', search_by_api),
 ]

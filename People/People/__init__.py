@@ -17,9 +17,9 @@ with open(path) as file:
     count = 0
     # iterate through csv rows using dictionary
     for row in reader:
-        person = Person(first_name=row['givenName'],
-                        middle_name=row['middleName'],
-                        last_name=row['surname'],
+        person = Person(first_name=row['givenName'].strip(),
+                        middle_name=row['middleName'].strip(),
+                        last_name=row['surname'].strip(),
                         index=count)
 
         # Create tuples in database and also index them with each insertion

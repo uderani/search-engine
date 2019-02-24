@@ -1,5 +1,5 @@
 from math import sqrt
-from .utilities import char_to_index, index_to_char
+from .utilities import char_to_index
 
 
 class Search:
@@ -9,7 +9,7 @@ class Search:
     def __init__(self, index_tree, search_key):
         self.index_tree = index_tree
         self.search_key = search_key
-        #Error margin calculation
+        # Error margin calculation
         max_distance = round(sqrt(len(search_key)-len(search_key)/2))
 
         # Avoid errors more than 4 since traversal will be huge
@@ -48,7 +48,6 @@ def explore(search_object, node, error_left, sub_key, level = 0):
     if len(sub_key) == 1:
         sub_key = '  '
     # Check if key exists or mark as error and traverse
-    skip = index
     if node.children[index]:
         parent = node.children[index]
         # Keep adding spaces till margin for error is left

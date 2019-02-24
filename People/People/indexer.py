@@ -10,7 +10,7 @@ class AlphabetNode:
         """
         Create possible children 26 alphabets + space to support one of the edge case names
         """
-        self.children = [None] * 27  # 27 to support space
+        self.children = [None] * 27  # 26 to support space
         # isEndOfWord is True if node represent the end of the word
         self.isEndOfWord = False
         self.possible = 0
@@ -48,6 +48,7 @@ class ColumnIndex:
         3. Marks leaf node
         4. Adds position of the key in database
         """
+
         p_crawl = self.root
         length = len(key)
         for level in range(length):
