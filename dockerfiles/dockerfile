@@ -1,0 +1,59 @@
+############################################################
+# Dockerfile to run a Django-based web application
+# Based on an Alpine Image
+############################################################
+# Set the base image to use to bare minimum
+FROM python:3.5.5-alpine3.8
+
+# Setting up project folder and logs folder and creating a user which will run the entrypoint file
+RUN mkdir -p /srv/search-engine \
+        && mkdir -p /srv/logs \
+        && set -x\
+        && addgroup -S -g 1000 appuser \
+        && adduser -S -u 999 -g appuser appuser \
+        && chown -R appuser /srv/logs \
+        && chown -R appuser /srv/search-engine
+
+# Install virtual env and other ssl related packages
+RUN apk add --virtual .build-deps build-base python3-dev py-virtualenv linux-headers libffi-dev openssl-dev\
+        && pip install virtualenv \
+        && cd /srv && virtualenv --no-site-packages -p python3 virtual_python \
+        && apk del openssl-dev .build-deps \
+        && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/*
+
+# Add requirements for pip
+ADD search-engine/dockerfiles/requirements.txt /srv/requirements.txt
+
+# Install pip requirements and remove dependencies once installed
+RUN    apk add --virtual .build-deps build-base linux-headers \
+        libressl libressl-dev libffi-dev\
+        && cd /srv && virtualenv --no-site-packages -p python3 virtual_python \
+        && ln -s /usr/include/locale.h /usr/include/xlocale.h \
+        && /srv/virtual_python/bin/pip install -r requirements.txt \
+        && apk del .build-deps \
+        && rm -rf /root/.cache/pip \
+        && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apk/*
+
+# Directory in container for project source files
+ENV DOCKYARD_SRC=./search-engine
+# Directory in container for all project files
+ENV DOCKYARD_SRVHOME=/srv
+# Directory in container for project source files
+ENV DOCKYARD_SRVPROJ=/srv/search-engine
+
+# Create application subdirectories
+WORKDIR $DOCKYARD_SRVHOME
+# Copy application source code to SRCDIR
+COPY $DOCKYARD_SRC $DOCKYARD_SRVPROJ
+
+# Port to expose
+EXPOSE 8000
+EXPOSE 9002
+
+# Copy entrypoint script into the image
+WORKDIR $DOCKYARD_SRVPROJ
+
+COPY search-engine/docker_entrypoint/docker-entrypoint.sh /
+
+USER appuser
+ENTRYPOINT ["/docker-entrypoint.sh"]
