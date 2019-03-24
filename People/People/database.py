@@ -1,5 +1,5 @@
 from .indexer import ColumnIndex
-from .utilities import clean_string
+from .utilities import clean_string, get_prefixes, get_suffixes
 # All data stored in list for now
 # Can be stored in memory if time permitted
 persons = []
@@ -27,14 +27,25 @@ class Person:
         last_name = clean_string(last_name)
 
         for name in first_name.split():
+            suffixes = get_suffixes(name)
+            prefixes = get_prefixes(name)
             name_index.insert(name, index)
+            possible_substrings = suffixes + prefixes
+            for possible_substring in possible_substrings:
+                name_index.insert(possible_substring, index)
+
         for name in middle_name.split():
+            suffixes = get_suffixes(name)
+            prefixes = get_prefixes(name)
             name_index.insert(name, index)
+            possible_substrings = suffixes + prefixes
+            for possible_substring in possible_substrings:
+                name_index.insert(possible_substring, index)
+
         for name in last_name.split():
+            suffixes = get_suffixes(name)
+            prefixes = get_prefixes(name)
+            possible_substrings = suffixes + prefixes
             name_index.insert(name, index)
-
-
-
-
-
-
+            for possible_substring in possible_substrings:
+                name_index.insert(possible_substring, index)

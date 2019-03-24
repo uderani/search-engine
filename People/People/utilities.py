@@ -67,4 +67,29 @@ def search_persons(keyword):
     return found, result_data
 
 
+def get_suffixes(string_name):
+    """
+    :return: an array of possible suffixes
+    """
+    name_suffixes = []
+
+    while len(string_name) > 3:
+        string_name = string_name[1:]
+        name_suffixes.append(string_name)
+
+    return name_suffixes
+
+
+def get_prefixes(string_name):
+    """
+    :return:an array of possible preixes
+    """
+
+    name_prefixes = []
+
+    while len(string_name) > 3:
+        string_name = string_name[:-1]
+        name_prefixes.append(string_name)
+
+    return name_prefixes
 
